@@ -7,7 +7,7 @@ let isSpeaking = false;
 let audioCtx = null;
 let zCounter = 60;
 
-function initAudio() { // audio
+function initAudio() {
   if (!audioCtx) {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (AudioCtx) audioCtx = new AudioCtx();
@@ -64,7 +64,7 @@ const voxStatusBadge = document.getElementById('vox-status-badge');
 const voxLed = document.getElementById('vox-led');
 let formantTimer = null;
 
-function speakRetroRobot(text) { // ai voice
+function speakRetroRobot(text) { // retro bot
   if (!crtPowered || !text) return;
   clearInterval(formantTimer);
   isSpeaking = true;
@@ -134,14 +134,14 @@ document.getElementById('btn-greet-judges').addEventListener('click', () => {
   const wVox = document.getElementById('win-vox');
   wVox.classList.remove('hidden-cyber');
   bringToFront(wVox);
-  speakRetroRobot('Greetings judges. Welcome to the VECTRA-86 project.');
+  speakRetroRobot('Greetings judges. Welcome to the Web Wave project by Chamalsha Liyanage from Kingswood College.');
 });
 
 const voxCanvas = document.getElementById('vox-canvas');
 const vCtx = voxCanvas.getContext('2d');
 let voxAnimTick = 0;
 
-function renderVoxFace() { // vox face
+function renderVoxFace() { //face vex
   const w = voxCanvas.width;
   const h = voxCanvas.height;
   vCtx.fillStyle = 'rgba(0, 0, 0, 0.38)';
@@ -180,7 +180,7 @@ function renderVoxFace() { // vox face
 }
 renderVoxFace();
 
-function playLaserSweep() { // power off
+function playLaserSweep() {
   if (!audioEnabled || !crtPowered) return;
   initAudio();
   if (!audioCtx) return;
@@ -224,7 +224,7 @@ function pulseDiskLed() {
   setTimeout(() => led.classList.remove('led-red-on'), 260);
 }
 
-const bootLines = [ // booting
+const bootLines = [ // bootlines ah
   { t: 'VECTRA-86 MK-IV :: WEBWAVE TACTICAL BIOS v4.0', d: 800 },
   { t: 'DEVELOPER: CHAMALSHA LIYANAGE :: KINGSWOOD COLLEGE', d: 1000 },
   { t: '----------------------------------------------------', d: 400 },
@@ -274,7 +274,7 @@ function processBootStep() {
   }
 }
 
-// power on delay
+// power on 
 playTone(70, 0.45, 'sawtooth', 0.15);
 bootTimeout = setTimeout(processBootStep, 1200);
 
@@ -503,7 +503,7 @@ function renderGlobe() {
 }
 renderGlobe();
 
-const bbsArticles = { // guide for jdgs
+const bbsArticles = {
   judges: `================================================
 :: WEBWAVE EVALUATION & ARCHITECTURE DOSSIER  ::
 ================================================
@@ -706,7 +706,7 @@ function updateAsteroidHud() {
   astLivesEl.textContent = astLives > 0 ? '▲'.repeat(astLives) : 'DEAD';
 }
 
-function resetAsteroidGame() { //astroid 
+function resetAsteroidGame() {
   astScore = 0;
   astWave = 1;
   astLives = 3;
@@ -1196,7 +1196,6 @@ document.querySelectorAll('.floppy-cart').forEach((disk) => {
     disk.classList.add('active-floppy');
     document.getElementById('mounted-disk-label').textContent = disk.dataset.disk;
 
-    // context switch
     const crtBeam = document.getElementById('crt-beam');
     crtBeam.style.opacity = '0.25';
     setTimeout(() => { crtBeam.style.opacity = '1'; }, 180);
@@ -1250,7 +1249,6 @@ powerBtn.addEventListener('click', () => {
   if (crtPowered) {
     playTone(780, 0.12, 'sine');
   } else {
-    // power off sound
     if(audioCtx && audioEnabled) {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
