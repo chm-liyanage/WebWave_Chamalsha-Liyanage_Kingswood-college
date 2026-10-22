@@ -278,11 +278,6 @@ function processBootStep() {
 playTone(70, 0.45, 'sawtooth', 0.15);
 bootTimeout = setTimeout(processBootStep, 1200);
 
-document.getElementById('boot-skip').addEventListener('click', () => {
-  clearTimeout(bootTimeout);
-  finishBoot();
-});
-
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !bootOverlay.classList.contains('boot-done')) {
     clearTimeout(bootTimeout);
