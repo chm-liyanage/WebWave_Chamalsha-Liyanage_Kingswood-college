@@ -134,7 +134,7 @@ document.getElementById('btn-greet-judges').addEventListener('click', () => {
   const wVox = document.getElementById('win-vox');
   wVox.classList.remove('hidden-cyber');
   bringToFront(wVox);
-  speakRetroRobot('Greetings judges. Welcome to the Web Wave project.');
+  speakRetroRobot('Greetings judges. Welcome to the VECTRA-86 project.');
 });
 
 const voxCanvas = document.getElementById('vox-canvas');
