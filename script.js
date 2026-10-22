@@ -7,7 +7,7 @@ let isSpeaking = false;
 let audioCtx = null;
 let zCounter = 60;
 
-function initAudio() {
+function initAudio() { // audio
   if (!audioCtx) {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (AudioCtx) audioCtx = new AudioCtx();
@@ -64,7 +64,7 @@ const voxStatusBadge = document.getElementById('vox-status-badge');
 const voxLed = document.getElementById('vox-led');
 let formantTimer = null;
 
-function speakRetroRobot(text) {
+function speakRetroRobot(text) { // ai voice
   if (!crtPowered || !text) return;
   clearInterval(formantTimer);
   isSpeaking = true;
@@ -141,7 +141,7 @@ const voxCanvas = document.getElementById('vox-canvas');
 const vCtx = voxCanvas.getContext('2d');
 let voxAnimTick = 0;
 
-function renderVoxFace() {
+function renderVoxFace() { // vox face
   const w = voxCanvas.width;
   const h = voxCanvas.height;
   vCtx.fillStyle = 'rgba(0, 0, 0, 0.38)';
@@ -180,7 +180,7 @@ function renderVoxFace() {
 }
 renderVoxFace();
 
-function playLaserSweep() {
+function playLaserSweep() { // power off
   if (!audioEnabled || !crtPowered) return;
   initAudio();
   if (!audioCtx) return;
@@ -224,7 +224,7 @@ function pulseDiskLed() {
   setTimeout(() => led.classList.remove('led-red-on'), 260);
 }
 
-const bootLines = [
+const bootLines = [ // booting
   { t: 'VECTRA-86 MK-IV :: WEBWAVE TACTICAL BIOS v4.0', d: 800 },
   { t: 'DEVELOPER: CHAMALSHA LIYANAGE :: KINGSWOOD COLLEGE', d: 1000 },
   { t: '----------------------------------------------------', d: 400 },
@@ -274,7 +274,7 @@ function processBootStep() {
   }
 }
 
-// Initial Power-On Thud and 1.2s delay before first text appears
+// power on delay
 playTone(70, 0.45, 'sawtooth', 0.15);
 bootTimeout = setTimeout(processBootStep, 1200);
 
@@ -508,7 +508,7 @@ function renderGlobe() {
 }
 renderGlobe();
 
-const bbsArticles = {
+const bbsArticles = { // guide for jdgs
   judges: `================================================
 :: WEBWAVE EVALUATION & ARCHITECTURE DOSSIER  ::
 ================================================
@@ -711,7 +711,7 @@ function updateAsteroidHud() {
   astLivesEl.textContent = astLives > 0 ? '▲'.repeat(astLives) : 'DEAD';
 }
 
-function resetAsteroidGame() {
+function resetAsteroidGame() { //astroid 
   astScore = 0;
   astWave = 1;
   astLives = 3;
@@ -1201,7 +1201,7 @@ document.querySelectorAll('.floppy-cart').forEach((disk) => {
     disk.classList.add('active-floppy');
     document.getElementById('mounted-disk-label').textContent = disk.dataset.disk;
 
-    // Simulate Hardware Context Switch (Dimming CRT briefly)
+    // context switch
     const crtBeam = document.getElementById('crt-beam');
     crtBeam.style.opacity = '0.25';
     setTimeout(() => { crtBeam.style.opacity = '1'; }, 180);
@@ -1255,7 +1255,7 @@ powerBtn.addEventListener('click', () => {
   if (crtPowered) {
     playTone(780, 0.12, 'sine');
   } else {
-    // Power down sweeping sound
+    // power off sound
     if(audioCtx && audioEnabled) {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
