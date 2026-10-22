@@ -391,6 +391,12 @@ body, html {
   white-space: pre-wrap;
 }
 
+.boot-hint {
+  font-size: 16px;
+  opacity: 0.8;
+  animation: crtMicroFlicker 1.5s infinite;
+}
+
 /* flicker n power off */
 @keyframes crtMicroFlicker {
   0% { opacity: 0.97; }
