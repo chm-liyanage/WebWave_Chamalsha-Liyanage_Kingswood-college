@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VECTRA-86 :: WebWave Project by Chamalsha Liyanage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="phosphor-amber">
+  <div class="workstation-desk">
+    <div class="monitor-chassis">
+      <div class="chassis-screw screw-tl"></div>
+      <div class="chassis-screw screw-tr"></div>
+      <div class="chassis-screw screw-bl"></div>
+      <div class="chassis-screw screw-br"></div>
+
+      <header class="chassis-top">
+        <div class="brand-cluster">
+          <div class="metal-badge">
+            <span class="badge-main">VECTRA-86</span>
+            <span class="badge-mk">WEBWAVE</span>
+          </div>
+          <div class="chassis-vents"></div>
+        </div>
+
+        <div class="telemetry-cluster">
+          <div class="seven-seg-box">
+            <span class="seg-label">CORE TEMP</span>
+            <span id="temp-readout" class="seg-digits">42C</span>
+          </div>
+          <div class="seven-seg-box">
+            <span class="seg-label">CLOCK MHz</span>
+            <span id="mhz-readout" class="seg-digits">33</span>
+          </div>
+          <div class="led-bank">
+            <div class="led-item">
+              <span id="disk-led" class="hw-led"></span>
+              <span>DISK</span>
+            </div>
+            <div class="led-item">
+              <span id="vox-led" class="hw-led"></span>
+              <span>VOX</span>
+            </div>
+            <div class="led-item">
+              <span id="modem-led" class="hw-led"></span>
+              <span>BAUD</span>
+            </div>
+            <div class="led-item">
+              <span id="turbo-led" class="hw-led"></span>
+              <span>TURBO</span>
+            </div>
+            <div class="led-item">
+              <span id="pwr-led" class="hw-led led-green-on"></span>
+              <span>PWR</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="crt-recess">
+        <div id="crt-frame" class="crt-frame">
+          <div class="crt-glass-glare"></div>
+          <div class="crt-scanlines"></div>
+          <div class="crt-vignette"></div>
+          <canvas id="matrix-rain" class="matrix-rain hidden-layer"></canvas>
+
+          <div id="meltdown-banner" class="meltdown-banner hidden-layer">
+            <div class="meltdown-box">
+              <div class="meltdown-title">! WARNING: VECTOR CORE THERMAL RUNAWAY !</div>
+              <div id="meltdown-timer" class="meltdown-timer">T-MINUS 09.9s</div>
+              <button id="coolant-btn" class="cyber-btn meltdown-purge">[ VENT LIQUID NITROGEN COOLANT ]</button>
+            </div>
+          </div>
+
+          <div id="boot-overlay" class="boot-overlay">
+            <div id="boot-text" class="boot-text"></div>
+            <button id="boot-skip" class="cyber-btn">[ESC] BYPASS BIOS POST</button>
+          </div>
+
+          <div id="crt-beam" class="crt-beam">
+            <header class="os-topbar">
+              <div class="topbar-left">
+                <span class="os-pill">GRID-OS v4.0</span>
+                <span id="mounted-disk-label" class="disk-path">A:\WEBWAVE_DECK.DSK</span>
+              </div>
+              <div class="topbar-center">
+                <button id="btn-greet-judges" class="top-mini-btn">[SPEAK TO JUDGES]</button>
+                <button id="btn-tile-wins" class="top-mini-btn">[TILE WORKSPACE]</button>
+                <button id="btn-reset-wins" class="top-mini-btn">[DEFAULT LAYOUT]</button>
+                <span id="hex-ticker">0x04F8:A90C</span>
+              </div>
+              <div class="topbar-right">
+                <span id="sys-clock" class="os-clock">00:00:00</span>
+              </div>
+            </header>
+
+            <main id="os-workspace" class="os-workspace">
+              <aside class="launcher-dock">
+                <button class="dock-tile" data-win="win-vox">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M2 5h3l4-3v12l-4-3H2V5zm9 1h2v4h-2V6zm3-2h1v8h-1V4z"/>
+                  </svg>
+                  <span class="dock-title">VOX.SAM</span>
+                </button>
+                <button class="dock-tile" data-win="win-asteroids">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M8 1L2 14l6-3 6 3L8 1zm0 4l2.5 5.5L8 9.2 5.5 10.5 8 5z"/>
+                  </svg>
+                  <span class="dock-title">ASTEROID</span>
+                </button>
+                <button class="dock-tile" data-win="win-globe">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2c1.4 0 2.6 2.1 2.9 5H5.1C5.4 5.1 6.6 3 8 3zm-4.7 5h1.8c.1 2.2.8 4.1 1.8 4.9A5 5 0 013.3 8zm6.8 4.9c1-.8 1.7-2.7 1.8-4.9h1.8a5 5 0 01-3.6 4.9z"/>
+                  </svg>
+                  <span class="dock-title">SATLINK.3D</span>
+                </button>
+                <button class="dock-tile" data-win="win-bbs">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M1 4h14v8H1V4zm2 2v4h10V6H3zm1 1h2v2H4V7zm6 0h2v2h-2V7z"/>
+                  </svg>
+                  <span class="dock-title">MODEM.BBS</span>
+                </button>
+                <button class="dock-tile" data-win="win-seq">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M2 2h3v3H2V2zm4 0h3v3H6V2zm4 0h4v3h-4V2zM2 6h3v3H2V6zm4 0h3v3H6V6zm4 0h4v3h-4V6zM2 10h3v4H2v-4zm4 0h3v4H6v-4zm4 0h4v4h-4v-4z"/>
+                  </svg>
+                  <span class="dock-title">SYNTH.SEQ</span>
+                </button>
+                <button class="dock-tile" data-win="win-scope">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M1 1h14v14H1V1zm2 2v10h10V3H3zm1 5h2l1-3 2 6 1-3h2v1H9.5l-1.5 4-2-6-1 3H4V8z"/>
+                  </svg>
+                  <span class="dock-title">VECTOR.OSC</span>
+                </button>
+                <button class="dock-tile" data-win="win-sprite">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M4 2h8v2h2v8h-2v2H4v-2H2V4h2V2zm2 3v2H4v2h2v2h4V9h2V7h-2V5H6z"/>
+                  </svg>
+                  <span class="dock-title">SPRITE.ROM</span>
+                </button>
+                <button class="dock-tile" data-win="win-cipher">
+                  <svg viewBox="0 0 16 16" class="dock-svg">
+                    <path d="M2 3h12v10H2V3zm2 2v2h2V5H4zm3 2v2h2V7H7zm3-2v2h2V5h-2zM4 9v2h8V9H4z"/>
+                  </svg>
+                  <span class="dock-title">ENIGMA.HEX</span>
+                </button>
+              </aside>
+
+              <section id="win-vox" class="cyber-win" style="top: 10px; left: 104px; width: 425px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[08] VOX.SAM :: 1984 SPEECH SYNTHESIZER</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-vox">X</button>
+                </div>
+                <div class="cyber-body vox-body">
+                  <div class="vox-top-panel">
+                    <canvas id="vox-canvas" width="165" height="92" class="vox-canvas"></canvas>
+                    <div class="vox-sliders">
+                      <div id="vox-status-badge" class="vox-badge">VOICE CHIP: READY</div>
+                      <label class="ctrl-row">
+                        <span>PITCH</span>
+                        <input type="range" id="vox-pitch" min="3" max="16" step="1" value="6">
+                      </label>
+                      <label class="ctrl-row">
+                        <span>SPEED</span>
+                        <input type="range" id="vox-speed" min="6" max="14" step="1" value="9">
+                      </label>
+                      <label class="ctrl-row">
+                        <span>THROAT</span>
+                        <input type="range" id="vox-throat" min="80" max="220" step="10" value="130">
+                      </label>
+                    </div>
+                  </div>
+                  <div class="vox-input-row">
+                    <input type="text" id="vox-input" class="cyber-input" value="GREETINGS JUDGES. WELCOME TO THE WEBWAVE PROJECT.">
+                    <button id="vox-speak-btn" class="cyber-btn vox-speak-btn">SPEAK</button>
+                  </div>
+                  <div class="vox-presets">
+                    <button class="cyber-btn" data-say="Greetings judges. Welcome to the Web Wave project.">GREET JUDGES</button>
+                    <button class="cyber-btn" data-say="Shall we play a game? Global orbital defense grid standing by.">WARGAMES</button>
+                    <button class="cyber-btn" data-say="Zero external libraries detected. Built with one hundred percent pure HTML, CSS, and Vanilla JavaScript.">FLEX SPECS</button>
+                    <button class="cyber-btn" data-say="Warning. Unauthorized mainframe intrusion detected in sector 86.">ALERT</button>
+                  </div>
+                </div>
+              </section>
+
+              <section id="win-globe" class="cyber-win" style="top: 10px; left: 542px; width: 420px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[06] SATLINK.3D :: ORBITAL TELEMETRY</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-globe">X</button>
+                </div>
+                <div class="cyber-body globe-body">
+                  <div class="globe-main-row">
+                    <canvas id="globe-canvas" width="205" height="165" class="globe-canvas"></canvas>
+                    <div class="globe-telemetry">
+                      <div class="sat-stat">SAT: <strong id="sat-name">KEYHOLE-86</strong></div>
+                      <div class="sat-stat">LAT: <strong id="sat-lat">+14.82°</strong></div>
+                      <div class="sat-stat">LON: <strong id="sat-lon">-072.19°</strong></div>
+                      <div class="sat-stat">ALT: <strong>418.4 KM</strong></div>
+                      <button id="sat-ping-btn" class="cyber-btn">PING ORBIT</button>
+                      <button id="sat-switch-btn" class="cyber-btn">NEXT SAT</button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="win-asteroids" class="cyber-win" style="top: 235px; left: 104px; width: 425px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[05] ASTEROID.VEC :: TACTICAL SIM</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-asteroids">X</button>
+                </div>
+                <div class="cyber-body asteroid-body">
+                  <div class="asteroid-hud">
+                    <span>SCORE: <strong id="ast-score">0000</strong></span>
+                    <span>HIGH: <strong id="ast-high">0000</strong></span>
+                    <span>WAVE: <strong id="ast-wave">01</strong></span>
+                    <span>HULL: <strong id="ast-lives">▲▲▲</strong></span>
+                  </div>
+                  <div class="asteroid-screen-wrap">
+                    <canvas id="asteroid-canvas" width="400" height="155" class="asteroid-canvas"></canvas>
+                  </div>
+                  <div class="asteroid-controls">
+                    <button id="ast-start-btn" class="cyber-btn">DEPLOY SHIP</button>
+                    <button id="ast-hyper-btn" class="cyber-btn">WARP [H]</button>
+                    <span class="ast-keys-hint">WASD/ARROWS + SPACE</span>
+                  </div>
+                </div>
+              </section>
+
+              <section id="win-seq" class="cyber-win" style="top: 235px; left: 542px; width: 420px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[02] SYNTH.SEQ :: 8-BIT AUDIO LAB</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-seq">X</button>
+                </div>
+                <div class="cyber-body seq-body">
+                  <div class="seq-toolbar">
+                    <button id="seq-play" class="cyber-btn">START LOOP</button>
+                    <button id="seq-preset" class="cyber-btn">CYBER BASS</button>
+                    <button id="seq-clear" class="cyber-btn">CLEAR</button>
+                    <span class="seq-bpm">BPM: <strong id="bpm-val">132</strong></span>
+                  </div>
+                  <div id="seq-grid" class="seq-grid"></div>
+                  <div id="seq-vu" class="seq-vu">
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="win-scope" class="cyber-win hidden-cyber" style="top: 40px; left: 240px; width: 390px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[01] VECTOR.OSC</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-scope">X</button>
+                </div>
+                <div class="cyber-body scope-body">
+                  <div class="scope-screen-wrap">
+                    <canvas id="scope-canvas" width="360" height="140" class="scope-canvas"></canvas>
+                    <div class="scope-overlay-hud">
+                      <span id="scope-readout">MODE: 3D WIREFRAME</span>
+                    </div>
+                  </div>
+                  <div class="scope-controls-grid">
+                    <label class="ctrl-row">
+                      <span>FREQ X</span>
+                      <input type="range" id="freq-x" min="1" max="8" step="1" value="3">
+                    </label>
+                    <label class="ctrl-row">
+                      <span>FREQ Y</span>
+                      <input type="range" id="freq-y" min="1" max="8" step="1" value="2">
+                    </label>
+                  </div>
+                  <div class="btn-strip">
+                    <button class="cyber-btn active-chip" data-scopemode="cube">3D CUBE</button>
+                    <button class="cyber-btn" data-scopemode="lissajous">LISSAJOUS</button>
+                    <button class="cyber-btn" data-scopemode="radar">RADAR</button>
+                    <button class="cyber-btn" data-scopemode="wave">WAVE</button>
+                  </div>
+                </div>
+              </section>
+
+              <section id="win-bbs" class="cyber-win hidden-cyber" style="top: 45px; left: 220px; width: 510px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[07] MODEM.BBS :: KINGSWOOD NODE</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-bbs">X</button>
+                </div>
+                <div class="cyber-body bbs-body">
+                  <div class="bbs-top-row">
+                    <span id="bbs-status" class="bbs-badge">CARRIER: DISCONNECTED</span>
+                    <button id="bbs-dial-btn" class="cyber-btn">[ DIAL 555-8686 :: CONNECT BBS ]</button>
+                  </div>
+                  <pre id="bbs-screen" class="bbs-screen">
+   _____ ____  ____  ______ ____  __  _______ __  __
+  / ___// __ \/ __ \/ ____// __ \/ / / / ___// / / /
+  \__ \/ / / / / / / __/  / /_/ / / / /\__ \/ /_/ / 
+ ___/ / /_/ / /_/ / /___ / _, _/ /_/ /___/ / __  /  
+/____/\____/_____/_____//_/ |_|\____//____/_/ /_/   
+:: KINGSWOOD COLLEGE DIAL-UP NODE [2400 BAUD] ::
+CLICK [DIAL 555-8686] ABOVE TO INITIALIZE HANDSHAKE...
+                  </pre>
+                  <div class="bbs-nav-btns">
+                    <button class="cyber-btn bbs-tab" data-bbs="judges">[1] WEBWAVE DOSSIER</button>
+                    <button class="cyber-btn bbs-tab" data-bbs="arch">[2] SYSTEM SPECS</button>
+                    <button class="cyber-btn bbs-tab" data-bbs="ascii">[3] ASCII VAULT</button>
+                  </div>
+                </div>
+              </section>
+
+              <section id="win-sprite" class="cyber-win hidden-cyber" style="top: 90px; left: 280px; width: 430px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[03] SPRITE.ROM</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-sprite">X</button>
+                </div>
+                <div class="cyber-body sprite-body">
+                  <div id="sprite-board" class="sprite-board"></div>
+                  <div class="sprite-side">
+                    <div class="rom-preview-card">
+                      <span>LIVE ROM CRT</span>
+                      <canvas id="sprite-preview" width="84" height="84" class="sprite-preview"></canvas>
+                    </div>
+                    <div class="sprite-btn-grid">
+                      <button id="sprite-invader" class="cyber-btn">MECH BOT</button>
+                      <button id="sprite-skull" class="cyber-btn">STARSHIP</button>
+                      <button id="sprite-invert" class="cyber-btn">INVERT</button>
+                      <button id="sprite-wipe" class="cyber-btn">CLEAR</button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="win-cipher" class="cyber-win hidden-cyber" style="top: 120px; left: 260px; width: 430px;">
+                <div class="cyber-titlebar">
+                  <span class="win-tag">[04] ENIGMA.HEX</span>
+                  <div class="titlebar-stripes"></div>
+                  <button class="win-close" data-close="win-cipher">X</button>
+                </div>
+                <div class="cyber-body cipher-body">
+                  <div class="cipher-box">
+                    <input type="text" id="cipher-input" class="cyber-input" value="WEBWAVE KINGSWOOD" placeholder="ENTER ASCII STREAM...">
+                    <div id="cipher-hex-out" class="cipher-hex-out">57 45 42 57 41 56 45 20 4B 49 4E 47 53 57 4F 4F 44</div>
+                  </div>
+                  <div id="cyber-log" class="cyber-log">
+                    <div>VECTRA-86 KERNEL READY.</div>
+                    <div>COMMANDS: HELP, SAY [TEXT], ARCADE, BBS, GLOBE, MELTDOWN, CLS</div>
+                  </div>
+                  <div class="cmd-line">
+                    <span>EXEC&gt;</span>
+                    <input type="text" id="cyber-cmd" class="cyber-input" autocomplete="off" spellcheck="false" placeholder="TYPE COMMAND...">
+                  </div>
+                </div>
+              </section>
+            </main>
+
+            <footer class="os-statusbar">
+              <div id="taskbar-strip" class="taskbar-strip"></div>
+              <span id="matrix-indicator">VOX.SAM: ONLINE</span>
+            </footer>
+          </div>
+        </div>
+      </div>
+
+      <footer class="control-deck">
+        <div class="deck-section floppy-bay">
+          <div class="bay-header">
+            <span class="deck-label">3.5" MICROFLOPPY DRIVE A:</span>
+            <span class="slot-mouth"></span>
+          </div>
+          <div class="floppy-rack">
+            <button class="floppy-cart active-floppy" data-disk="A:\WEBWAVE_DECK.DSK" data-layout="default">
+              <span class="shutter"></span>
+              <span class="cart-text">DISK 01 :: COMMAND</span>
+            </button>
+            <button class="floppy-cart" data-disk="A:\VOX_SYNTH.ROM" data-layout="voice">
+              <span class="shutter"></span>
+              <span class="cart-text">DISK 02 :: VOX LAB</span>
+            </button>
+            <button class="floppy-cart" data-disk="A:\KINGSWOOD_BBS.DSK" data-layout="bbs">
+              <span class="shutter"></span>
+              <span class="cart-text">DISK 03 :: MODEM BBS</span>
+            </button>
+            <button class="floppy-cart" data-disk="A:\CREATIVE_ROM.DSK" data-layout="creative">
+              <span class="shutter"></span>
+              <span class="cart-text">DISK 04 :: ROM STUDIO</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="deck-section phosphor-bay">
+          <span class="deck-label">CRT PHOSPHOR MATRIX</span>
+          <div class="rocker-group">
+            <button class="rocker-btn active-rocker" data-phos="phosphor-amber">AMBER</button>
+            <button class="rocker-btn" data-phos="phosphor-green">GREEN</button>
+            <button class="rocker-btn" data-phos="phosphor-cyan">CYAN</button>
+            <button class="rocker-btn" data-phos="phosphor-plasma">PLASMA</button>
+          </div>
+        </div>
+
+        <div class="deck-section master-bay">
+          <span class="deck-label">HARDWARE OVERRIDES</span>
+          <div class="rocker-group">
+            <button id="turbo-btn" class="rocker-btn">TURBO</button>
+            <button id="matrix-btn" class="rocker-btn">MATRIX</button>
+            <button id="meltdown-btn" class="rocker-btn warn-rocker">OVERCLOCK</button>
+            <button id="degauss-btn" class="rocker-btn">DEGAUSS</button>
+            <button id="mute-btn" class="rocker-btn">SND: ON</button>
+            <button id="power-btn" class="rocker-btn pwr-rocker">PWR</button>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
