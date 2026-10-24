@@ -57,23 +57,25 @@ function playFormantSyllable(baseFreq, throatFreq, duration = 0.07) {
   osc.stop(audioCtx.currentTime + duration);
 }
 
-const voxPitchEl = document.getElementById('vox-pitch');
-const voxSpeedEl = document.getElementById('vox-speed');
-const voxThroatEl = document.getElementById('vox-throat');
-const voxStatusBadge = document.getElementById('vox-status-badge');
-const voxLed = document.getElementById('vox-led');
 let formantTimer = null;
 
-function speakRetroRobot(text) { // retro bot
+function speakRetroRobot(text) {
   if (!crtPowered || !text) return;
   clearInterval(formantTimer);
   isSpeaking = true;
-  voxLed.classList.add('led-green-on');
-  voxStatusBadge.textContent = 'SPEAKING PHONEMES...';
+  
+  const voxLed = document.getElementById('vox-led');
+  const voxStatusBadge = document.getElementById('vox-status-badge');
+  const voxPitchEl = document.getElementById('vox-pitch');
+  const voxSpeedEl = document.getElementById('vox-speed');
+  const voxThroatEl = document.getElementById('vox-throat');
 
-  const pitchSetting = parseInt(voxPitchEl.value, 10);
-  const speedSetting = parseInt(voxSpeedEl.value, 10);
-  const throatSetting = parseInt(voxThroatEl.value, 10);
+  if (voxLed) voxLed.classList.add('led-green-on');
+  if (voxStatusBadge) voxStatusBadge.textContent = 'SPEAKING PHONEMES...';
+
+  const pitchSetting = voxPitchEl ? parseInt(voxPitchEl.value, 10) : 6;
+  const speedSetting = voxSpeedEl ? parseInt(voxSpeedEl.value, 10) : 9;
+  const throatSetting = voxThroatEl ? parseInt(voxThroatEl.value, 10) : 130;
 
   const clean = text.replace(/[^a-zA-Z0-9 .,?!]/g, '');
   let charIdx = 0;
@@ -83,8 +85,8 @@ function speakRetroRobot(text) { // retro bot
     if (charIdx >= clean.length) {
       clearInterval(formantTimer);
       isSpeaking = false;
-      voxLed.classList.remove('led-green-on');
-      voxStatusBadge.textContent = 'VOICE CHIP: READY';
+      if (voxLed) voxLed.classList.remove('led-green-on');
+      if (voxStatusBadge) voxStatusBadge.textContent = 'VOICE CHIP: READY';
       return;
     }
     const ch = clean.charCodeAt(charIdx);
@@ -104,19 +106,19 @@ function speakRetroRobot(text) { // retro bot
     utter.onend = () => {
       clearInterval(formantTimer);
       isSpeaking = false;
-      voxLed.classList.remove('led-green-on');
-      voxStatusBadge.textContent = 'VOICE CHIP: READY';
+      if (voxLed) voxLed.classList.remove('led-green-on');
+      if (voxStatusBadge) voxStatusBadge.textContent = 'VOICE CHIP: READY';
     };
     window.speechSynthesis.speak(utter);
   }
 }
 
-document.getElementById('vox-speak-btn').addEventListener('click', () => {
-  const txt = document.getElementById('vox-input').value.trim();
-  speakRetroRobot(txt);
+document.getElementById('vox-speak-btn')?.addEventListener('click', () => {
+  const txt = document.getElementById('vox-input')?.value.trim();
+  if(txt) speakRetroRobot(txt);
 });
 
-document.getElementById('vox-input').addEventListener('keydown', (e) => {
+document.getElementById('vox-input')?.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     speakRetroRobot(e.target.value.trim());
   }
@@ -125,23 +127,27 @@ document.getElementById('vox-input').addEventListener('keydown', (e) => {
 document.querySelectorAll('[data-say]').forEach((btn) => {
   btn.addEventListener('click', () => {
     const phrase = btn.dataset.say;
-    document.getElementById('vox-input').value = phrase.toUpperCase();
+    const voxInput = document.getElementById('vox-input');
+    if(voxInput) voxInput.value = phrase.toUpperCase();
     speakRetroRobot(phrase);
   });
 });
 
-document.getElementById('btn-greet-judges').addEventListener('click', () => {
+document.getElementById('btn-greet-judges')?.addEventListener('click', () => {
   const wVox = document.getElementById('win-vox');
-  wVox.classList.remove('hidden-cyber');
-  bringToFront(wVox);
-  speakRetroRobot('Greetings judges. Welcome to the VECTRA-86 project.');
+  if (wVox) {
+    wVox.classList.remove('hidden-cyber');
+    bringToFront(wVox);
+  }
+  speakRetroRobot('Greetings judges. Welcome to the Web Wave project by Chamalsha Liyanage from Kingswood College.');
 });
 
 const voxCanvas = document.getElementById('vox-canvas');
-const vCtx = voxCanvas.getContext('2d');
+const vCtx = voxCanvas ? voxCanvas.getContext('2d') : null;
 let voxAnimTick = 0;
 
-function renderVoxFace() { //face vex
+function renderVoxFace() {
+  if (!vCtx) return;
   const w = voxCanvas.width;
   const h = voxCanvas.height;
   vCtx.fillStyle = 'rgba(0, 0, 0, 0.38)';
@@ -178,7 +184,7 @@ function renderVoxFace() { //face vex
   voxAnimTick++;
   requestAnimationFrame(renderVoxFace);
 }
-renderVoxFace();
+if (voxCanvas) renderVoxFace();
 
 function playLaserSweep() {
   if (!audioEnabled || !crtPowered) return;
@@ -199,7 +205,7 @@ function playLaserSweep() {
 
 function playModemHandshake(callback) {
   const modemLed = document.getElementById('modem-led');
-  modemLed.classList.add('led-amber-on');
+  if (modemLed) modemLed.classList.add('led-amber-on');
   const dtmf = [697, 770, 852, 941, 1209, 1336, 1477];
   for (let i = 0; i < 7; i++) {
     setTimeout(() => playTone(dtmf[i % dtmf.length], 0.06, 'sine', 0.06), i * 85);
@@ -211,20 +217,20 @@ function playModemHandshake(callback) {
     }
   }, 1050);
   setTimeout(() => {
-    modemLed.classList.remove('led-amber-on');
+    if (modemLed) modemLed.classList.remove('led-amber-on');
     if (callback) callback();
   }, 1750);
 }
 
 function pulseDiskLed() {
   const led = document.getElementById('disk-led');
-  led.classList.add('led-red-on');
+  if (led) led.classList.add('led-red-on');
   playTone(135, 0.04, 'sawtooth', 0.06);
   setTimeout(() => playTone(185, 0.05, 'sawtooth', 0.06), 55);
-  setTimeout(() => led.classList.remove('led-red-on'), 260);
+  setTimeout(() => { if (led) led.classList.remove('led-red-on'); }, 260);
 }
 
-const bootLines = [ // bootlines ah
+const bootLines = [
   { t: 'VECTRA-86 MK-IV :: WEBWAVE TACTICAL BIOS v4.0', d: 800 },
   { t: 'DEVELOPER: CHAMALSHA LIYANAGE :: KINGSWOOD COLLEGE', d: 1000 },
   { t: '----------------------------------------------------', d: 400 },
@@ -243,12 +249,13 @@ let bootIdx = 0;
 let bootTimeout = null;
 
 function finishBoot() {
-  bootOverlay.classList.add('boot-done');
+  if (bootOverlay) bootOverlay.classList.add('boot-done');
   playTone(587.33, 0.1, 'square');
   setTimeout(() => playTone(880, 0.2, 'square'), 120);
 }
 
 function processBootStep() {
+  if (!bootText) return;
   if (bootIdx < bootLines.length) {
     const step = bootLines[bootIdx];
     bootText.textContent += step.t + '\n';
@@ -274,12 +281,11 @@ function processBootStep() {
   }
 }
 
-// power on 
 playTone(70, 0.45, 'sawtooth', 0.15);
 bootTimeout = setTimeout(processBootStep, 1200);
 
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && !bootOverlay.classList.contains('boot-done')) {
+  if (e.key === 'Escape' && bootOverlay && !bootOverlay.classList.contains('boot-done')) {
     clearTimeout(bootTimeout);
     finishBoot();
   }
@@ -289,9 +295,12 @@ const cyberWins = document.querySelectorAll('.cyber-win');
 const taskbarStrip = document.getElementById('taskbar-strip');
 
 function renderTaskbarPills() {
+  if (!taskbarStrip) return;
   taskbarStrip.innerHTML = '';
   cyberWins.forEach((win) => {
-    const tag = win.querySelector('.win-tag').textContent.split('::')[0].trim();
+    const titleEl = win.querySelector('.win-tag');
+    if (!titleEl) return;
+    const tag = titleEl.textContent.split('::')[0].trim();
     const btn = document.createElement('button');
     const isVisible = !win.classList.contains('hidden-cyber');
     const isFocused = !win.classList.contains('inactive-cyber') && isVisible;
@@ -314,6 +323,7 @@ function renderTaskbarPills() {
 }
 
 function bringToFront(win) {
+  if (!win) return; // Prevent crashes if window is missing
   cyberWins.forEach((w) => w.classList.add('inactive-cyber'));
   win.classList.remove('inactive-cyber');
   zCounter++;
@@ -323,6 +333,8 @@ function bringToFront(win) {
 
 cyberWins.forEach((win) => {
   const bar = win.querySelector('.cyber-titlebar');
+  if (!bar) return;
+  
   let dragging = false;
   let startX = 0;
   let startY = 0;
@@ -339,6 +351,7 @@ cyberWins.forEach((win) => {
   window.addEventListener('mousemove', (e) => {
     if (!dragging) return;
     const workspace = document.getElementById('os-workspace');
+    if (!workspace) return;
     const maxX = workspace.clientWidth - 140;
     const maxY = workspace.clientHeight - 40;
     win.style.left = Math.max(0, Math.min(maxX, e.clientX - startX)) + 'px';
@@ -354,19 +367,22 @@ document.querySelectorAll('.win-close').forEach((btn) => {
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     const target = document.getElementById(btn.dataset.close);
-    if (target) target.classList.add('hidden-cyber');
-    renderTaskbarPills();
-    playTone(220, 0.06, 'sawtooth');
+    if (target) {
+      target.classList.add('hidden-cyber');
+      renderTaskbarPills();
+      playTone(220, 0.06, 'sawtooth');
+    }
   });
 });
 
 document.querySelectorAll('.dock-tile').forEach((btn) => {
   btn.addEventListener('click', () => {
-    const win = document.getElementById(btn.dataset.win);
-    if (!win) return;
-    win.classList.remove('hidden-cyber');
-    bringToFront(win);
-    pulseDiskLed();
+    const target = document.getElementById(btn.dataset.win);
+    if (target) {
+      target.classList.remove('hidden-cyber');
+      bringToFront(target);
+      pulseDiskLed();
+    }
   });
 });
 
@@ -381,7 +397,7 @@ const defaultCoords = {
   'win-cipher': { top: '120px', left: '260px' }
 };
 
-document.getElementById('btn-reset-wins').addEventListener('click', () => {
+document.getElementById('btn-reset-wins')?.addEventListener('click', () => {
   Object.keys(defaultCoords).forEach((id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -390,16 +406,20 @@ document.getElementById('btn-reset-wins').addEventListener('click', () => {
     }
   });
   ['win-vox', 'win-globe', 'win-asteroids', 'win-seq'].forEach((id) => {
-    document.getElementById(id).classList.remove('hidden-cyber');
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('hidden-cyber');
   });
   ['win-scope', 'win-bbs', 'win-sprite', 'win-cipher'].forEach((id) => {
-    document.getElementById(id).classList.add('hidden-cyber');
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden-cyber');
   });
-  bringToFront(document.getElementById('win-vox'));
+  
+  const mainWin = document.getElementById('win-vox') || document.getElementById('win-asteroids');
+  bringToFront(mainWin);
   pulseDiskLed();
 });
 
-document.getElementById('btn-tile-wins').addEventListener('click', () => {
+document.getElementById('btn-tile-wins')?.addEventListener('click', () => {
   const visible = Array.from(cyberWins).filter((w) => !w.classList.contains('hidden-cyber'));
   visible.forEach((win, idx) => {
     const col = idx % 2;
@@ -410,14 +430,15 @@ document.getElementById('btn-tile-wins').addEventListener('click', () => {
   playTone(640, 0.05);
 });
 
-bringToFront(document.getElementById('win-vox'));
+// Initial focus on boot
+bringToFront(document.getElementById('win-vox') || document.getElementById('win-asteroids'));
 
 function getPhosphorColor() {
   return getComputedStyle(document.body).getPropertyValue('--phos-main').trim();
 }
 
 const globeCanvas = document.getElementById('globe-canvas');
-const gCtx = globeCanvas.getContext('2d');
+const gCtx = globeCanvas ? globeCanvas.getContext('2d') : null;
 const satellites = [
   { name: 'KEYHOLE-86', inc: 0.65, speed: 0.025 },
   { name: 'VECTRA-SAT 1', inc: -0.5, speed: 0.038 },
@@ -427,19 +448,21 @@ let activeSatIdx = 0;
 let globeAngle = 0;
 let pingWave = 0;
 
-document.getElementById('sat-switch-btn').addEventListener('click', () => {
+document.getElementById('sat-switch-btn')?.addEventListener('click', () => {
   activeSatIdx = (activeSatIdx + 1) % satellites.length;
-  document.getElementById('sat-name').textContent = satellites[activeSatIdx].name;
+  const nameEl = document.getElementById('sat-name');
+  if (nameEl) nameEl.textContent = satellites[activeSatIdx].name;
   playTone(720, 0.05);
 });
 
-document.getElementById('sat-ping-btn').addEventListener('click', () => {
+document.getElementById('sat-ping-btn')?.addEventListener('click', () => {
   pingWave = 1;
   playTone(980, 0.08, 'sine');
   setTimeout(() => playTone(1320, 0.12, 'sine'), 90);
 });
 
 function renderGlobe() {
+  if (!gCtx) return;
   const w = globeCanvas.width;
   const h = globeCanvas.height;
   gCtx.fillStyle = 'rgba(0, 0, 0, 0.35)';
@@ -494,32 +517,34 @@ function renderGlobe() {
   if (Math.random() > 0.85) {
     const latVal = (Math.sin(satAng) * 65).toFixed(2);
     const lonVal = (((globeAngle * 57) % 360) - 180).toFixed(2);
-    document.getElementById('sat-lat').textContent = (latVal >= 0 ? '+' : '') + latVal + '°';
-    document.getElementById('sat-lon').textContent = (lonVal >= 0 ? '+' : '') + lonVal + '°';
+    const latEl = document.getElementById('sat-lat');
+    const lonEl = document.getElementById('sat-lon');
+    if (latEl) latEl.textContent = (latVal >= 0 ? '+' : '') + latVal + '°';
+    if (lonEl) lonEl.textContent = (lonVal >= 0 ? '+' : '') + lonVal + '°';
   }
 
   globeAngle += sat.speed * (turboMode ? 1.8 : 1);
   requestAnimationFrame(renderGlobe);
 }
-renderGlobe();
+if (globeCanvas) renderGlobe();
 
 const bbsArticles = {
   judges: `================================================
 :: WEBWAVE EVALUATION & ARCHITECTURE DOSSIER  ::
 ================================================
 [DEVELOPER] Chamalsha Liyanage
-[INSTITUTION] Kingswood College
+[SCHOOL] Kingswood College
 [CATEGORY] WebWave
 
-[CREATIVITY - 30%]
+[CREATIVITY]
 - Custom 1986 Vector Hardware Cyberdeck (Zero Win95 clones)
 - Talking 1984 VOX.SAM Speech Chip + 3D Satellite Tracker
 
-[TECHNICAL SKILL - 30%]
+[TECHNICAL SKILL]
 - 100% Pure HTML5, CSS3 & Vanilla JS (No external libraries)
 - Web Audio API Formant Speech + 5-Canvas Engine
 
-[THEME & ORIGINALITY - 40%]
+[THEME & ORIGINALITY]
 - Authentic P1/P3 Phosphor CRT shaders & Degauss`,
   arch: `================================================
 :: VECTRA-86 MK-IV HARDWARE SPECIFICATIONS    ::
@@ -540,27 +565,28 @@ STORAGE   : 3.5" MICROFLOPPY BAY (4 HOT-SWAP DISKS)`,
        |||||`
 };
 
-document.getElementById('bbs-dial-btn').addEventListener('click', () => {
+document.getElementById('bbs-dial-btn')?.addEventListener('click', () => {
   const status = document.getElementById('bbs-status');
   const screen = document.getElementById('bbs-screen');
-  status.textContent = 'DIALING 555-8686...';
-  screen.textContent = 'INITIALIZING 2400 BAUD ACOUSTIC HANDSHAKE...\nLISTENING FOR CARRIER TONE...';
+  if (status) status.textContent = 'DIALING 555-8686...';
+  if (screen) screen.textContent = 'INITIALIZING 2400 BAUD ACOUSTIC HANDSHAKE...\nLISTENING FOR CARRIER TONE...';
   playModemHandshake(() => {
-    status.textContent = 'CARRIER: 2400 BAUD ONLINE';
-    screen.textContent = bbsArticles.judges;
+    if (status) status.textContent = 'CARRIER: 2400 BAUD ONLINE';
+    if (screen) screen.textContent = bbsArticles.judges;
     speakRetroRobot('Kingswood College carrier connected at twenty four hundred baud.');
   });
 });
 
 document.querySelectorAll('.bbs-tab').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.getElementById('bbs-screen').textContent = bbsArticles[btn.dataset.bbs];
+    const screen = document.getElementById('bbs-screen');
+    if (screen) screen.textContent = bbsArticles[btn.dataset.bbs];
     playTone(620, 0.04);
   });
 });
 
 const scopeCanvas = document.getElementById('scope-canvas');
-const sCtx = scopeCanvas.getContext('2d');
+const sCtx = scopeCanvas ? scopeCanvas.getContext('2d') : null;
 const freqXInput = document.getElementById('freq-x');
 const freqYInput = document.getElementById('freq-y');
 const scopeReadout = document.getElementById('scope-readout');
@@ -572,12 +598,13 @@ document.querySelectorAll('[data-scopemode]').forEach((btn) => {
     document.querySelectorAll('[data-scopemode]').forEach((b) => b.classList.remove('active-chip'));
     btn.classList.add('active-chip');
     scopeMode = btn.dataset.scopemode;
-    scopeReadout.textContent = 'MODE: ' + scopeMode.toUpperCase();
+    if (scopeReadout) scopeReadout.textContent = 'MODE: ' + scopeMode.toUpperCase();
     playTone(660, 0.05);
   });
 });
 
 function renderScope() {
+  if (!sCtx) return;
   sCtx.fillStyle = 'rgba(0, 0, 0, 0.28)';
   sCtx.fillRect(0, 0, scopeCanvas.width, scopeCanvas.height);
 
@@ -587,8 +614,8 @@ function renderScope() {
 
   const cx = scopeCanvas.width / 2;
   const cy = scopeCanvas.height / 2;
-  const fx = parseFloat(freqXInput.value);
-  const fy = parseFloat(freqYInput.value);
+  const fx = freqXInput ? parseFloat(freqXInput.value) : 3;
+  const fy = freqYInput ? parseFloat(freqYInput.value) : 2;
   const speedMult = turboMode ? 2.1 : 1;
 
   if (scopeMode === 'lissajous') {
@@ -645,10 +672,10 @@ function renderScope() {
   phase += 0.032 * speedMult;
   requestAnimationFrame(renderScope);
 }
-renderScope();
+if (scopeCanvas) renderScope();
 
 const astCanvas = document.getElementById('asteroid-canvas');
-const aCtx = astCanvas.getContext('2d');
+const aCtx = astCanvas ? astCanvas.getContext('2d') : null;
 const astScoreEl = document.getElementById('ast-score');
 const astHighEl = document.getElementById('ast-high');
 const astWaveEl = document.getElementById('ast-wave');
@@ -680,6 +707,7 @@ function makeAsteroid(x, y, radius, tier) {
 }
 
 function spawnAsteroidWave(count) {
+  if (!astCanvas) return;
   asteroids = [];
   for (let i = 0; i < count; i++) {
     let ax = Math.random() * astCanvas.width;
@@ -700,10 +728,10 @@ function spawnDebris(x, y, count = 8) {
 }
 
 function updateAsteroidHud() {
-  astScoreEl.textContent = String(astScore).padStart(4, '0');
-  astHighEl.textContent = String(astHigh).padStart(4, '0');
-  astWaveEl.textContent = String(astWave).padStart(2, '0');
-  astLivesEl.textContent = astLives > 0 ? '▲'.repeat(astLives) : 'DEAD';
+  if (astScoreEl) astScoreEl.textContent = String(astScore).padStart(4, '0');
+  if (astHighEl) astHighEl.textContent = String(astHigh).padStart(4, '0');
+  if (astWaveEl) astWaveEl.textContent = String(astWave).padStart(2, '0');
+  if (astLivesEl) astLivesEl.textContent = astLives > 0 ? '▲'.repeat(astLives) : 'DEAD';
 }
 
 function resetAsteroidGame() {
@@ -712,14 +740,14 @@ function resetAsteroidGame() {
   astLives = 3;
   bullets = [];
   particles = [];
-  ship = { x: astCanvas.width / 2, y: astCanvas.height / 2, vx: 0, vy: 0, angle: -Math.PI / 2, invuln: 90 };
+  ship = { x: astCanvas ? astCanvas.width / 2 : 200, y: astCanvas ? astCanvas.height / 2 : 100, vx: 0, vy: 0, angle: -Math.PI / 2, invuln: 90 };
   spawnAsteroidWave(4);
   updateAsteroidHud();
   playTone(520, 0.07, 'square');
 }
 
 function hyperspaceJump() {
-  if (astLives <= 0) return;
+  if (astLives <= 0 || !astCanvas) return;
   ship.x = 30 + Math.random() * (astCanvas.width - 60);
   ship.y = 30 + Math.random() * (astCanvas.height - 60);
   ship.vx = 0;
@@ -728,11 +756,12 @@ function hyperspaceJump() {
   playTone(880, 0.05, 'triangle');
 }
 
-document.getElementById('ast-start-btn').addEventListener('click', resetAsteroidGame);
-document.getElementById('ast-hyper-btn').addEventListener('click', hyperspaceJump);
+document.getElementById('ast-start-btn')?.addEventListener('click', resetAsteroidGame);
+document.getElementById('ast-hyper-btn')?.addEventListener('click', hyperspaceJump);
 
 function isArcadeFocused() {
   const winAst = document.getElementById('win-asteroids');
+  if (!winAst) return false;
   const activeTag = document.activeElement ? document.activeElement.tagName : '';
   if (activeTag === 'INPUT') return false;
   return !winAst.classList.contains('hidden-cyber') && !winAst.classList.contains('inactive-cyber');
@@ -766,6 +795,7 @@ function wrapCoord(obj, w, h) {
 }
 
 function stepAsteroids() {
+  if (!aCtx || !astCanvas) return;
   const w = astCanvas.width;
   const h = astCanvas.height;
   aCtx.fillStyle = 'rgba(0, 0, 0, 0.36)';
@@ -891,7 +921,7 @@ function stepAsteroids() {
 }
 spawnAsteroidWave(4);
 updateAsteroidHud();
-stepAsteroids();
+if (astCanvas) stepAsteroids();
 
 const seqGrid = document.getElementById('seq-grid');
 const vuBars = document.querySelectorAll('.vu-bar');
@@ -912,6 +942,7 @@ let currentStep = 0;
 let seqInterval = null;
 
 function buildSequencer() {
+  if (!seqGrid) return;
   seqGrid.innerHTML = '';
   trackDefs.forEach((tr, rIdx) => {
     const label = document.createElement('div');
@@ -936,6 +967,7 @@ function buildSequencer() {
 buildSequencer();
 
 function stepSequencer() {
+  if (!seqGrid) return;
   const allPads = seqGrid.querySelectorAll('.seq-pad');
   allPads.forEach((p) => {
     p.classList.toggle('pad-playhead', parseInt(p.dataset.col, 10) === currentStep);
@@ -959,7 +991,7 @@ function restartSeqLoop() {
   seqInterval = setInterval(stepSequencer, turboMode ? 140 : 195);
 }
 
-seqPlayBtn.addEventListener('click', () => {
+seqPlayBtn?.addEventListener('click', () => {
   seqPlaying = !seqPlaying;
   if (seqPlaying) {
     seqPlayBtn.textContent = 'STOP LOOP';
@@ -972,12 +1004,12 @@ seqPlayBtn.addEventListener('click', () => {
   }
 });
 
-document.getElementById('seq-clear').addEventListener('click', () => {
+document.getElementById('seq-clear')?.addEventListener('click', () => {
   for (let r = 0; r < 4; r++) for (let c = 0; c < 8; c++) seqState[r][c] = 0;
   buildSequencer();
 });
 
-document.getElementById('seq-preset').addEventListener('click', () => {
+document.getElementById('seq-preset')?.addEventListener('click', () => {
   const preset = [
     [1, 1, 0, 1, 0, 1, 1, 0],
     [0, 1, 1, 0, 1, 0, 1, 1],
@@ -991,7 +1023,7 @@ document.getElementById('seq-preset').addEventListener('click', () => {
 
 const spriteBoard = document.getElementById('sprite-board');
 const previewCanvas = document.getElementById('sprite-preview');
-const pCtx = previewCanvas.getContext('2d');
+const pCtx = previewCanvas ? previewCanvas.getContext('2d') : null;
 const spriteCells = [];
 let drawingSprite = false;
 let spriteBounce = 0;
@@ -999,23 +1031,26 @@ let spriteBounce = 0;
 const botPattern = [14,15,16,17,18,19,20,21,25,26,33,34,37,39,40,42,43,44,46,49,50,51,52,53,54,55,56,57,58,61,63,64,65,66,67,68,70,74,75,80,81,87,88,91,92,98,101,102,105];
 const shipPattern = [5,6,17,18,28,29,30,31,40,41,42,43,50,51,52,53,54,55,56,57,61,62,64,65,66,67,69,70,73,74,75,76,77,78,79,80,81,82,85,88,91,94,97,106];
 
-for (let i = 0; i < 144; i++) {
-  const cell = document.createElement('div');
-  cell.className = 'sprite-cell' + (botPattern.includes(i) ? ' lit-cell' : '');
-  cell.addEventListener('mousedown', () => {
-    drawingSprite = true;
-    cell.classList.toggle('lit-cell');
-    playTone(720, 0.02);
-  });
-  cell.addEventListener('mouseenter', () => {
-    if (drawingSprite) cell.classList.add('lit-cell');
-  });
-  spriteBoard.appendChild(cell);
-  spriteCells.push(cell);
+if (spriteBoard) {
+  for (let i = 0; i < 144; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'sprite-cell' + (botPattern.includes(i) ? ' lit-cell' : '');
+    cell.addEventListener('mousedown', () => {
+      drawingSprite = true;
+      cell.classList.toggle('lit-cell');
+      playTone(720, 0.02);
+    });
+    cell.addEventListener('mouseenter', () => {
+      if (drawingSprite) cell.classList.add('lit-cell');
+    });
+    spriteBoard.appendChild(cell);
+    spriteCells.push(cell);
+  }
 }
 window.addEventListener('mouseup', () => { drawingSprite = false; });
 
 function animateSpritePreview() {
+  if (!pCtx) return;
   pCtx.clearRect(0, 0, 84, 84);
   pCtx.fillStyle = getPhosphorColor();
   const offsetY = Math.sin(spriteBounce) * 4;
@@ -1027,17 +1062,17 @@ function animateSpritePreview() {
   spriteBounce += 0.08;
   requestAnimationFrame(animateSpritePreview);
 }
-animateSpritePreview();
+if (previewCanvas) animateSpritePreview();
 
 function loadSpritePreset(indices) {
   spriteCells.forEach((c, idx) => c.classList.toggle('lit-cell', indices.includes(idx)));
   pulseDiskLed();
 }
 
-document.getElementById('sprite-invader').addEventListener('click', () => loadSpritePreset(botPattern));
-document.getElementById('sprite-skull').addEventListener('click', () => loadSpritePreset(shipPattern));
-document.getElementById('sprite-wipe').addEventListener('click', () => loadSpritePreset([]));
-document.getElementById('sprite-invert').addEventListener('click', () => {
+document.getElementById('sprite-invader')?.addEventListener('click', () => loadSpritePreset(botPattern));
+document.getElementById('sprite-skull')?.addEventListener('click', () => loadSpritePreset(shipPattern));
+document.getElementById('sprite-wipe')?.addEventListener('click', () => loadSpritePreset([]));
+document.getElementById('sprite-invert')?.addEventListener('click', () => {
   spriteCells.forEach((c) => c.classList.toggle('lit-cell'));
 });
 
@@ -1046,20 +1081,23 @@ const cipherHexOut = document.getElementById('cipher-hex-out');
 const cyberLog = document.getElementById('cyber-log');
 const cyberCmd = document.getElementById('cyber-cmd');
 
-cipherInput.addEventListener('input', () => {
-  cipherHexOut.textContent = Array.from(cipherInput.value)
-    .map((ch) => ch.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0'))
-    .join(' ') || '00';
+cipherInput?.addEventListener('input', () => {
+  if (cipherHexOut) {
+    cipherHexOut.textContent = Array.from(cipherInput.value)
+      .map((ch) => ch.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0'))
+      .join(' ') || '00';
+  }
 });
 
 function appendLog(msg) {
+  if (!cyberLog) return;
   const line = document.createElement('div');
   line.textContent = msg;
   cyberLog.appendChild(line);
   cyberLog.scrollTop = cyberLog.scrollHeight;
 }
 
-cyberCmd.addEventListener('keydown', (e) => {
+cyberCmd?.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return;
   const val = cyberCmd.value.trim();
   const upper = val.toUpperCase();
@@ -1075,20 +1113,17 @@ cyberCmd.addEventListener('keydown', (e) => {
     appendLog('VOX.SAM SPEAKING: "' + phrase + '"');
   } else if (upper === 'ARCADE') {
     const w = document.getElementById('win-asteroids');
-    w.classList.remove('hidden-cyber');
-    bringToFront(w);
+    if (w) { w.classList.remove('hidden-cyber'); bringToFront(w); }
   } else if (upper === 'BBS') {
     const w = document.getElementById('win-bbs');
-    w.classList.remove('hidden-cyber');
-    bringToFront(w);
+    if (w) { w.classList.remove('hidden-cyber'); bringToFront(w); }
   } else if (upper === 'GLOBE') {
     const w = document.getElementById('win-globe');
-    w.classList.remove('hidden-cyber');
-    bringToFront(w);
+    if (w) { w.classList.remove('hidden-cyber'); bringToFront(w); }
   } else if (upper === 'MELTDOWN') {
     triggerMeltdown();
   } else if (upper === 'CLS') {
-    cyberLog.innerHTML = '';
+    if (cyberLog) cyberLog.innerHTML = '';
   } else {
     appendLog('ERR 0x04F2: UNKNOWN DIRECTIVE');
   }
@@ -1102,12 +1137,19 @@ function triggerMeltdown() {
   meltdownActive = true;
   meltdownRemaining = 9.9;
   document.body.classList.add('core-meltdown');
-  document.getElementById('meltdown-banner').classList.remove('hidden-layer');
-  document.getElementById('temp-readout').textContent = '99C';
+  const banner = document.getElementById('meltdown-banner');
+  if (banner) banner.classList.remove('hidden-layer');
+  
+  const temp = document.getElementById('temp-readout');
+  if (temp) temp.textContent = '99C';
+  
   speakRetroRobot('Warning. Vector core thermal runaway. Vent liquid nitrogen immediately.');
+  
   meltdownTimerId = setInterval(() => {
     meltdownRemaining = Math.max(0, meltdownRemaining - 0.1);
-    document.getElementById('meltdown-timer').textContent = 'T-MINUS 0' + meltdownRemaining.toFixed(1) + 's';
+    const timerEl = document.getElementById('meltdown-timer');
+    if (timerEl) timerEl.textContent = 'T-MINUS 0' + meltdownRemaining.toFixed(1) + 's';
+    
     if (Math.floor(meltdownRemaining * 10) % 3 === 0) {
       playTone(880, 0.07, 'sawtooth', 0.07);
     }
@@ -1122,51 +1164,64 @@ function purgeMeltdown() {
   meltdownActive = false;
   clearInterval(meltdownTimerId);
   document.body.classList.remove('core-meltdown');
-  document.getElementById('meltdown-banner').classList.add('hidden-layer');
-  document.getElementById('temp-readout').textContent = '42C';
+  const banner = document.getElementById('meltdown-banner');
+  if (banner) banner.classList.add('hidden-layer');
+  
+  const temp = document.getElementById('temp-readout');
+  if (temp) temp.textContent = '42C';
   speakRetroRobot('Liquid nitrogen vented. Core temperature stabilized.');
 }
 
-document.getElementById('meltdown-btn').addEventListener('click', triggerMeltdown);
-document.getElementById('coolant-btn').addEventListener('click', purgeMeltdown);
+document.getElementById('meltdown-btn')?.addEventListener('click', triggerMeltdown);
+document.getElementById('coolant-btn')?.addEventListener('click', purgeMeltdown);
 
 function triggerDegauss() {
   const frame = document.getElementById('crt-frame');
+  if (!frame) return;
   frame.classList.remove('degauss-shake');
   void frame.offsetWidth;
   frame.classList.add('degauss-shake');
   playTone(90, 0.35, 'sawtooth', 0.1);
 }
-document.getElementById('degauss-btn').addEventListener('click', triggerDegauss);
+document.getElementById('degauss-btn')?.addEventListener('click', triggerDegauss);
 
 const turboBtn = document.getElementById('turbo-btn');
 function toggleTurbo() {
   turboMode = !turboMode;
-  turboBtn.classList.toggle('active-rocker', turboMode);
-  document.getElementById('turbo-led').classList.toggle('led-amber-on', turboMode);
-  document.getElementById('mhz-readout').textContent = turboMode ? '66' : '33';
-  document.getElementById('temp-readout').textContent = turboMode ? '68C' : '42C';
-  document.getElementById('bpm-val').textContent = turboMode ? '168' : '132';
+  if (turboBtn) turboBtn.classList.toggle('active-rocker', turboMode);
+  
+  const led = document.getElementById('turbo-led');
+  if (led) led.classList.toggle('led-amber-on', turboMode);
+  
+  const mhz = document.getElementById('mhz-readout');
+  if (mhz) mhz.textContent = turboMode ? '66' : '33';
+  
+  const temp = document.getElementById('temp-readout');
+  if (temp) temp.textContent = turboMode ? '68C' : '42C';
+  
+  const bpm = document.getElementById('bpm-val');
+  if (bpm) bpm.textContent = turboMode ? '168' : '132';
+  
   restartSeqLoop();
   speakRetroRobot(turboMode ? 'Turbo clock sixty six megahertz engaged.' : 'Standard thirty three megahertz clock restored.');
 }
-turboBtn.addEventListener('click', toggleTurbo);
+turboBtn?.addEventListener('click', toggleTurbo);
 
 const matrixCanvas = document.getElementById('matrix-rain');
-const mCtx = matrixCanvas.getContext('2d');
+const mCtx = matrixCanvas ? matrixCanvas.getContext('2d') : null;
 const matrixBtn = document.getElementById('matrix-btn');
 const drops = Array(40).fill(1);
 
 function toggleMatrixRain() {
   matrixActive = !matrixActive;
-  matrixCanvas.classList.toggle('hidden-layer', !matrixActive);
-  matrixBtn.classList.toggle('active-rocker', matrixActive);
+  if (matrixCanvas) matrixCanvas.classList.toggle('hidden-layer', !matrixActive);
+  if (matrixBtn) matrixBtn.classList.toggle('active-rocker', matrixActive);
   playTone(540, 0.06);
 }
-matrixBtn.addEventListener('click', toggleMatrixRain);
+matrixBtn?.addEventListener('click', toggleMatrixRain);
 
 setInterval(() => {
-  if (!matrixActive) return;
+  if (!matrixActive || !mCtx || !matrixCanvas) return;
   matrixCanvas.width = matrixCanvas.clientWidth;
   matrixCanvas.height = matrixCanvas.clientHeight;
   mCtx.fillStyle = 'rgba(0, 0, 0, 0.12)';
@@ -1194,45 +1249,72 @@ document.querySelectorAll('.floppy-cart').forEach((disk) => {
   disk.addEventListener('click', () => {
     document.querySelectorAll('.floppy-cart').forEach((d) => d.classList.remove('active-floppy'));
     disk.classList.add('active-floppy');
-    document.getElementById('mounted-disk-label').textContent = disk.dataset.disk;
+    
+    const label = document.getElementById('mounted-disk-label');
+    if (label) label.textContent = disk.dataset.disk;
 
     const crtBeam = document.getElementById('crt-beam');
-    crtBeam.style.opacity = '0.25';
-    setTimeout(() => { crtBeam.style.opacity = '1'; }, 180);
+    if (crtBeam) {
+      crtBeam.style.opacity = '0.25';
+      setTimeout(() => { crtBeam.style.opacity = '1'; }, 180);
+    }
 
     pulseDiskLed();
 
     const mode = disk.dataset.layout;
     const allIds = ['win-vox', 'win-scope', 'win-globe', 'win-asteroids', 'win-seq', 'win-bbs', 'win-sprite', 'win-cipher'];
-    allIds.forEach((id) => document.getElementById(id).classList.add('hidden-cyber'));
+    
+    // Hide all windows securely
+    allIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden-cyber');
+    });
 
+    // Safely unhide based on mode
     if (mode === 'default') {
       ['win-vox', 'win-globe', 'win-asteroids', 'win-seq'].forEach((id) => {
-        document.getElementById(id).classList.remove('hidden-cyber');
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden-cyber');
       });
-      bringToFront(document.getElementById('win-vox'));
-    } else if (mode === 'voice') {
+      bringToFront(document.getElementById('win-vox') || document.getElementById('win-asteroids'));
+    } else if (mode === 'voice' || mode === 'audio') {
       ['win-vox', 'win-scope', 'win-seq'].forEach((id) => {
-        document.getElementById(id).classList.remove('hidden-cyber');
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden-cyber');
       });
-      bringToFront(document.getElementById('win-vox'));
-      speakRetroRobot('Voice synthesis laboratory disk mounted.');
+      bringToFront(document.getElementById('win-vox') || document.getElementById('win-seq'));
+      if (mode === 'voice') speakRetroRobot('Voice synthesis laboratory disk mounted.');
     } else if (mode === 'bbs') {
       ['win-bbs', 'win-globe'].forEach((id) => {
-        document.getElementById(id).classList.remove('hidden-cyber');
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden-cyber');
       });
       bringToFront(document.getElementById('win-bbs'));
-    } else if (mode === 'creative') {
+    } else if (mode === 'creative' || mode === 'crypto') {
       ['win-sprite', 'win-cipher', 'win-scope'].forEach((id) => {
-        document.getElementById(id).classList.remove('hidden-cyber');
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden-cyber');
       });
-      bringToFront(document.getElementById('win-sprite'));
+      bringToFront(document.getElementById('win-sprite') || document.getElementById('win-cipher'));
+    } else if (mode === 'arcade') {
+      ['win-asteroids', 'win-seq'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden-cyber');
+      });
+      bringToFront(document.getElementById('win-asteroids'));
+    } else {
+      // Ultimate fallback if mode matches nothing
+      const fallback = document.getElementById('win-scope');
+      if (fallback) {
+        fallback.classList.remove('hidden-cyber');
+        bringToFront(fallback);
+      }
     }
   });
 });
 
 const muteBtn = document.getElementById('mute-btn');
-muteBtn.addEventListener('click', () => {
+muteBtn?.addEventListener('click', () => {
   audioEnabled = !audioEnabled;
   muteBtn.textContent = audioEnabled ? 'SND: ON' : 'SND: OFF';
   if (!audioEnabled && 'speechSynthesis' in window) {
@@ -1241,10 +1323,13 @@ muteBtn.addEventListener('click', () => {
 });
 
 const powerBtn = document.getElementById('power-btn');
-powerBtn.addEventListener('click', () => {
+powerBtn?.addEventListener('click', () => {
   crtPowered = !crtPowered;
-  document.getElementById('crt-beam').classList.toggle('beam-off', !crtPowered);
-  document.getElementById('pwr-led').classList.toggle('led-green-on', crtPowered);
+  const beam = document.getElementById('crt-beam');
+  const led = document.getElementById('pwr-led');
+  
+  if (beam) beam.classList.toggle('beam-off', !crtPowered);
+  if (led) led.classList.toggle('led-green-on', crtPowered);
   
   if (crtPowered) {
     playTone(780, 0.12, 'sine');
@@ -1267,7 +1352,10 @@ powerBtn.addEventListener('click', () => {
 
 setInterval(() => {
   const now = new Date();
-  document.getElementById('sys-clock').textContent = now.toTimeString().split(' ')[0];
+  const clk = document.getElementById('sys-clock');
+  if (clk) clk.textContent = now.toTimeString().split(' ')[0];
+  
   const randHex = Math.floor(4096 + Math.random() * 61440).toString(16).toUpperCase();
-  document.getElementById('hex-ticker').textContent = '0x04F8:' + randHex;
+  const ticker = document.getElementById('hex-ticker');
+  if (ticker) ticker.textContent = '0x04F8:' + randHex;
 }, 1000);
