@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- info -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VECTRA-86 :: WebWave Project by Chamalsha Liyanage</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +67,7 @@
           <div class="crt-vignette"></div>
           <canvas id="matrix-rain" class="matrix-rain hidden-layer"></canvas>
 
-          <div id="meltdown-banner" class="meltdown-banner hidden-layer"> <!-- thermal warning -->
+          <div id="meltdown-banner" class="meltdown-banner hidden-layer">
             <div class="meltdown-box">
               <div class="meltdown-title">! WARNING: VECTOR CORE THERMAL RUNAWAY !</div>
               <div id="meltdown-timer" class="meltdown-timer">T-MINUS 09.9s</div>
@@ -77,7 +77,7 @@
 
           <div id="boot-overlay" class="boot-overlay">
             <div id="boot-text" class="boot-text"></div>
-            <div class="boot-hint">>> PRESS [ESC] TO BYPASS BIOS POST</div>
+            <button id="boot-skip" class="cyber-btn">[ESC] BYPASS BIOS POST</button>
           </div>
 
           <div id="crt-beam" class="crt-beam">
@@ -97,7 +97,7 @@
               </div>
             </header>
 
-            <main id="os-workspace" class="os-workspace"> <!-- sectors -->
+            <main id="os-workspace" class="os-workspace">
               <aside class="launcher-dock">
                 <button class="dock-tile" data-win="win-vox">
                   <svg viewBox="0 0 16 16" class="dock-svg">
@@ -175,11 +175,11 @@
                     </div>
                   </div>
                   <div class="vox-input-row">
-                    <input type="text" id="vox-input" class="cyber-input" value="GREETINGS JUDGES. WELCOME TO THE VECTRA-86 PROJECT.">
+                    <input type="text" id="vox-input" class="cyber-input" value="GREETINGS JUDGES. WELCOME TO THE WEBWAVE PROJECT.">
                     <button id="vox-speak-btn" class="cyber-btn vox-speak-btn">SPEAK</button>
                   </div>
                   <div class="vox-presets">
-                    <button class="cyber-btn" data-say="Greetings judges. Welcome to the VECTRA-86 project.">GREET JUDGES</button>
+                    <button class="cyber-btn" data-say="Greetings judges. Welcome to the Web Wave project.">GREET JUDGES</button>
                     <button class="cyber-btn" data-say="Shall we play a game? Global orbital defense grid standing by.">WARGAMES</button>
                     <button class="cyber-btn" data-say="Zero external libraries detected. Built with one hundred percent pure HTML, CSS, and Vanilla JavaScript.">FLEX SPECS</button>
                     <button class="cyber-btn" data-say="Warning. Unauthorized mainframe intrusion detected in sector 86.">ALERT</button>
@@ -373,7 +373,7 @@ CLICK [DIAL 555-8686] ABOVE TO INITIALIZE HANDSHAKE...
         </div>
       </div>
 
-      <footer class="control-deck"> <!-- ctrl deck -->
+      <footer class="control-deck">
         <div class="deck-section floppy-bay">
           <div class="bay-header">
             <span class="deck-label">3.5" MICROFLOPPY DRIVE A:</span>
