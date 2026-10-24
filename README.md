@@ -1,7 +1,7 @@
 # VECTRA-86 MK-IV :: Interactive Retro OS Website
 
 **Developer:** Chamalsha Liyanage  
-**Institution:** Kingswood College  
+**School:** Kingswood College  
 **Competition Category:** WebWave  
 
 ## Overview
