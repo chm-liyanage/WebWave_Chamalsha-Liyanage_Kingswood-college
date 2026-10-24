@@ -323,7 +323,7 @@ function renderTaskbarPills() {
 }
 
 function bringToFront(win) {
-  if (!win) return; // Prevent crashes if window is missing
+  if (!win) return;
   cyberWins.forEach((w) => w.classList.add('inactive-cyber'));
   win.classList.remove('inactive-cyber');
   zCounter++;
@@ -430,7 +430,6 @@ document.getElementById('btn-tile-wins')?.addEventListener('click', () => {
   playTone(640, 0.05);
 });
 
-// Initial focus on boot
 bringToFront(document.getElementById('win-vox') || document.getElementById('win-asteroids'));
 
 function getPhosphorColor() {
@@ -1264,13 +1263,11 @@ document.querySelectorAll('.floppy-cart').forEach((disk) => {
     const mode = disk.dataset.layout;
     const allIds = ['win-vox', 'win-scope', 'win-globe', 'win-asteroids', 'win-seq', 'win-bbs', 'win-sprite', 'win-cipher'];
     
-    // Hide all windows securely
     allIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) el.classList.add('hidden-cyber');
     });
 
-    // Safely unhide based on mode
     if (mode === 'default') {
       ['win-vox', 'win-globe', 'win-asteroids', 'win-seq'].forEach((id) => {
         const el = document.getElementById(id);
@@ -1303,7 +1300,6 @@ document.querySelectorAll('.floppy-cart').forEach((disk) => {
       });
       bringToFront(document.getElementById('win-asteroids'));
     } else {
-      // Ultimate fallback if mode matches nothing
       const fallback = document.getElementById('win-scope');
       if (fallback) {
         fallback.classList.remove('hidden-cyber');
