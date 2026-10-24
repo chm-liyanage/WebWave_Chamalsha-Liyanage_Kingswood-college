@@ -49,7 +49,6 @@ body.core-meltdown {
   font-family: 'VT323', monospace;
 }
 
-/* === POLISH: Authentic Retro Scrollbars === */
 ::-webkit-scrollbar {
   width: 14px;
   background-color: var(--crt-bg);
@@ -285,7 +284,6 @@ body, html {
     radial-gradient(circle at 50% 50%, transparent 68%, rgba(0, 0, 0, 0.65) 100%);
 }
 
-/* === POLISH: Drifting Scanlines === */
 @keyframes scrollScanlines {
   0% { background-position: 0 0; }
   100% { background-position: 0 8px; }
@@ -391,7 +389,6 @@ body, html {
   white-space: pre-wrap;
 }
 
-/* === POLISH: Micro-Flicker & TV Power-Off physics === */
 @keyframes crtMicroFlicker {
   0% { opacity: 0.97; }
   50% { opacity: 1.0; }
@@ -414,7 +411,7 @@ body, html {
 .crt-beam.beam-off {
   transform: scale(1, 0.005);
   opacity: 0;
-  filter: brightness(6) contrast(4); /* Simulates the bright white line flash */
+  filter: brightness(6) contrast(4); 
 }
 
 .os-topbar {
@@ -934,7 +931,6 @@ body, html {
   gap: 6px;
 }
 
-/* === POLISH: Glowing Inputs === */
 .cyber-input {
   width: 100%;
   background-color: rgba(0, 0, 0, 0.8);
