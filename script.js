@@ -139,7 +139,7 @@ document.getElementById('btn-greet-judges')?.addEventListener('click', () => {
     wVox.classList.remove('hidden-cyber');
     bringToFront(wVox);
   }
-  speakRetroRobot('Greetings judges. Welcome to the Web Wave project by Chamalsha Liyanage from Kingswood College.');
+  speakRetroRobot('Greetings judges. Welcome to the VECTRA-86 Project.');
 });
 
 const voxCanvas = document.getElementById('vox-canvas');
